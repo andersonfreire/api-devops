@@ -9,10 +9,15 @@ services:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
         - POSTGRES_DB=devops_db
-    volumes:
+      volumes:
         # Cria um diretório chamado 'dados_postgres' para persistência dos dados
-        - ./dados_postgres:/var/lib/postgresql/data
-
+        - ./bd:/var/lib/postgresql/data
+      # Verifica se o banco de dados está pronto para tentativas de conexão
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d devops_db"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
     api.producao:
       # Usa a API que o GitHub Actions enviou para o Docker Hub
       image: andersonfreire1984/api-devops:latest  
@@ -24,4 +29,5 @@ services:
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=postgres
       depends_on:
-        - postgres.producao
+        postgres.producao:
+          condition: service_healthy

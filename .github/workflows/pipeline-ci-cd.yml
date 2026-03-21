@@ -13,16 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     # A IA só atua se for um Pull Request
     if: github.event_name == 'pull_request'
-    
+
+    # Permissão para o robô ler o código e escrever o comentário no Pull Request
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
         
       - name: Agente Revisor Gemini
-        uses: rouxk/gemini-pr-review@v1.2
+        uses: sshnaidm/gemini-code-review-action@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          gemini-key: ${{ secrets.GEMINI_API_KEY }}
+          model: gemini-2.5-flash
 
   # Job 2: Fluxo da entrega
   build-and-deploy:

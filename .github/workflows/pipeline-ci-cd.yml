@@ -24,8 +24,12 @@ jobs:
         
       - name: Agente Revisor Gemini
         uses: sshnaidm/gemini-code-review-action@v2
+        env:
+          # Variável de ambiente para o script interno
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         with:
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          # Permissão do GitHub para o robô escrever na tela
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   # Job 2: Fluxo da entrega
   build-and-deploy:

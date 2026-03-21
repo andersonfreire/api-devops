@@ -27,7 +27,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           gemini-key: ${{ secrets.GEMINI_API_KEY }}
-          model: gemini-1.5-flash
+          model: gemini-2.5-flash
 
   # Job 2: Fluxo da entrega
   build-and-deploy:

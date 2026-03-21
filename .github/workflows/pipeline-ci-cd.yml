@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Build & Push
+name: CI/CD Pipeline - Build, Push & AI Review
 
 on:
   push:
@@ -7,14 +7,37 @@ on:
     branches: [ "main" ]
 
 jobs:
+  # ==========================================
+  # JOB 1: AGENTE DE IA (BÔNUS)
+  # ==========================================
+  ai-code-review:
+    name: Code Review com Gemini
+    runs-on: ubuntu-latest
+    # A IA só trabalha se for um Pull Request
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        
+      - name: Agente Revisor Gemini
+        uses: rouxk/gemini-pr-review@v1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+
+  # ==========================================
+  # JOB 2: SUA ESTEIRA ORIGINAL INTACTA
+  # ==========================================
   build-and-deploy:
+    name: Build Java & Push Docker Hub
     runs-on: ubuntu-latest
 
     steps:
     # Baixa o código
     - name: Checkout do código
       uses: actions/checkout@v4
-    
+      
     # Instala o Java 17
     - name: Configurar JDK 17
       uses: actions/setup-java@v4

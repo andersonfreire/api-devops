@@ -7,13 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # ==========================================
-  # JOB 1: AGENTE DE IA (BÔNUS)
-  # ==========================================
+  # Job 1: Agente de IA
   ai-code-review:
     name: Code Review com Gemini
     runs-on: ubuntu-latest
-    # A IA só trabalha se for um Pull Request
+    # A IA só atua se for um Pull Request
     if: github.event_name == 'pull_request'
     
     steps:
@@ -26,9 +24,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
 
-  # ==========================================
-  # JOB 2: SUA ESTEIRA ORIGINAL INTACTA
-  # ==========================================
+  # Job 2: Fluxo da entrega
   build-and-deploy:
     name: Build Java & Push Docker Hub
     runs-on: ubuntu-latest
@@ -54,7 +50,7 @@ jobs:
     - name: Configurar Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    # Faz login no Docker Hub com as credenciais que defini
+    # Faz login no Docker Hub com as credenciais definidas
     - name: Login no Docker Hub
       uses: docker/login-action@v3
       with:
